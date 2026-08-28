@@ -18,6 +18,7 @@ const assets: Record<string, MediaAsset> = {
   front: media.watchFront,
   threeQuarter: media.watchThreeQuarter,
   side: media.watchSide,
+  wrist: media.watchWrist,
   caseback: media.watchCaseback,
 };
 

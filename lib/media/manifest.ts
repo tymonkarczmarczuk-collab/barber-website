@@ -9,13 +9,12 @@
  * have a .jpg or .png instead. Rather than requiring a manual
  * conversion, the scan also looks for the same filename under a set of
  * common raster extensions and resolves to whichever one is actually
- * present. Video files are matched exactly (.mp4 only) since <video>
- * cannot be pointed at an arbitrary format the same way.
+ * present.
  *
- * The result is handed to the client through <MediaProvider>, so a
- * component can render a real <Image>/<video> when the asset is on
- * disk and a designed placeholder when it is not — with no broken
- * image requests and no layout shift either way.
+ * The result is handed to the client through <MediaProvider>, so
+ * <MediaFrame> can render a real <Image> when the asset is on disk and
+ * a designed placeholder when it is not — with no broken image
+ * requests and no layout shift either way.
  *
  * Called from app/layout.tsx (a server component). In development the
  * scan re-runs per request, so a newly dropped file appears on reload.
@@ -51,8 +50,6 @@ function resolveAsset(declaredPath: string): string | false {
   if (fileExists(direct)) return declaredPath;
 
   const ext = path.extname(declaredPath);
-  if (ext === ".mp4") return false;
-
   const withoutExt = declaredPath.slice(0, -ext.length);
   for (const candidate of IMAGE_FALLBACK_EXTENSIONS) {
     const candidatePath = `${withoutExt}.${candidate}`;

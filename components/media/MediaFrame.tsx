@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
 import type { MediaAsset, Motif } from "@/lib/config/media";
 import { useResolvedMediaSrc } from "@/components/media/MediaProvider";
 import { useSurface } from "@/components/ui/Section";
@@ -23,7 +22,7 @@ const motifMap: Record<Exclude<Motif, "none">, (p: { className?: string }) => Re
   horizon: HorizonMotif,
 };
 
-type CommonProps = {
+type MediaFrameProps = {
   asset: MediaAsset;
   className?: string;
   /** Overrides the aspect ratio declared on the asset. */
@@ -39,7 +38,7 @@ type CommonProps = {
 };
 
 /**
- * Renders the real asset when the file exists in /public, and a
+ * Renders the real photograph when the file exists in /public, and a
  * designed placeholder when it does not — same box, same rhythm, no
  * layout shift, no broken requests.
  */
@@ -52,7 +51,7 @@ export function MediaFrame({
   children,
   tone,
   rounded = true,
-}: CommonProps) {
+}: MediaFrameProps) {
   const resolvedSrc = useResolvedMediaSrc(asset.src);
   const surface = useSurface();
   const resolvedTone = tone ?? surface;
@@ -80,87 +79,13 @@ export function MediaFrame({
   );
 }
 
-/**
- * Video with a poster still and a graceful fall back to the placeholder.
- * Autoplay is muted, inline and looped; playback is skipped entirely for
- * visitors who ask for reduced motion, who get the poster instead.
- */
-export function MediaVideo({
-  asset,
-  className = "",
-  aspect,
-  tone,
-  rounded = true,
-  children,
-}: CommonProps) {
-  const videoSrc = useResolvedMediaSrc(asset.src);
-  const posterSrc = useResolvedMediaSrc(asset.poster);
-  const surface = useSurface();
-  const resolvedTone = tone ?? surface;
-  const ref = useRef<HTMLVideoElement>(null);
-  const [allowMotion, setAllowMotion] = useState(false);
-
-  useEffect(() => {
-    const query = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setAllowMotion(!query.matches);
-    update();
-    query.addEventListener("change", update);
-    return () => query.removeEventListener("change", update);
-  }, []);
-
-  /* Only decode the film while it is actually on screen. */
-  useEffect(() => {
-    const el = ref.current;
-    if (!el || !allowMotion) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) void el.play().catch(() => {});
-        else el.pause();
-      },
-      { threshold: 0.2 },
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [allowMotion, videoSrc]);
-
-  return (
-    <div
-      className={`relative overflow-hidden ${rounded ? "rounded-frame" : ""} ${className}`}
-      style={{ aspectRatio: aspect ?? asset.aspect }}
-    >
-      {videoSrc && allowMotion ? (
-        <video
-          ref={ref}
-          className="absolute inset-0 h-full w-full object-cover"
-          muted
-          loop
-          playsInline
-          preload="none"
-          poster={posterSrc}
-          aria-label={asset.alt}
-        >
-          <source src={videoSrc} type="video/mp4" />
-        </video>
-      ) : posterSrc ? (
-        <Image src={posterSrc} alt={asset.alt} fill sizes="100vw" className="object-cover" />
-      ) : (
-        <Placeholder asset={asset} tone={resolvedTone} kind="video">
-          {children}
-        </Placeholder>
-      )}
-    </div>
-  );
-}
-
 function Placeholder({
   asset,
   tone,
-  kind = "image",
   children,
 }: {
   asset: MediaAsset;
   tone: "dark" | "light";
-  kind?: "image" | "video";
   children?: React.ReactNode;
 }) {
   const Motif = asset.motif && asset.motif !== "none" ? motifMap[asset.motif] : null;
@@ -198,9 +123,7 @@ function Placeholder({
 
       {children ?? (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 p-6 text-center">
-          {kind === "video" ? (
-            <FilmMark dark={dark} />
-          ) : Motif ? (
+          {Motif ? (
             <Motif
               className={`h-[34%] max-h-36 w-auto ${dark ? "text-silver-100/22" : "text-charcoal-900/22"}`}
             />
@@ -221,23 +144,6 @@ function Placeholder({
         </div>
       )}
     </div>
-  );
-}
-
-/** Signals a moving-image slot without pretending to be a player. */
-function FilmMark({ dark }: { dark: boolean }) {
-  const color = dark ? "text-silver-100/30" : "text-charcoal-900/25";
-  return (
-    <span
-      aria-hidden="true"
-      className={`flex h-14 w-14 items-center justify-center rounded-full border ${
-        dark ? "border-silver-100/25" : "border-charcoal-900/20"
-      } ${color}`}
-    >
-      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="currentColor">
-        <path d="M9 6.5 18 12l-9 5.5z" />
-      </svg>
-    </span>
   );
 }
 

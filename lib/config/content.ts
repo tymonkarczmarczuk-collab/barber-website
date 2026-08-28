@@ -79,6 +79,12 @@ export const content = {
         body: "Thirty-nine millimetres across and around 9.2 mm deep, with a short lug span. The intent is refinement rather than size: it should wear closer to a 38 mm dress-sport watch than to a modern sports watch.",
       },
       {
+        key: "wrist",
+        label: "On the wrist",
+        title: "On the wrist",
+        body: "The test that matters most: how it actually sits. A short lug-to-lug and a case held close to the wrist, worn under a cuff or on its own.",
+      },
+      {
         key: "caseback",
         label: "Caseback",
         title: "The reverse",

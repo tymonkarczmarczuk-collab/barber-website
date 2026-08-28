@@ -58,8 +58,7 @@ components/
   sections/  Hero · Philosophy · Story · WatchReveal · Specifications ·
              Craft · Presence · Movement · RotaryConnection · Caseback ·
              Edition · Price · Service · Faq · Contact
-  media/     MediaFrame · MediaVideo · MediaProvider · WatchDial ·
-             WatchCaseback · Motifs
+  media/     MediaFrame · MediaProvider · WatchDial · WatchCaseback · Motifs
   motion/    Reveal · RevealGroup · RevealItem · TextReveal
   ui/        Section · Container · Cta · Wordmark · Typography ·
              Accordion · StatusTag · ApprovalStatus · PurchaseCTA
@@ -70,7 +69,7 @@ lib/
   services/  contactService.ts
   commerce/  checkout.ts
 
-public/media/               Drop real photography and film here
+public/media/               Drop real photography here
 public/media/MEDIA-GUIDE.md Filenames, crops, resolutions, where each appears
 legacy/                     The previous site that lived in this repo
 ```
@@ -167,11 +166,10 @@ the server console (`CONTACT_PROVIDER=log`).
 - The form has associated labels, `aria-invalid`, `aria-describedby`,
   live status messages, and validation shared between client and server.
 - `prefers-reduced-motion` is honoured throughout — scroll-linked
-  effects, parallax, the pinned horizontal track, the count-up, the
-  pointer ring and video autoplay all stand down, in JavaScript as well
-  as in CSS.
-- Images go through `next/image` with explicit `sizes`; film is
-  lazy-loaded, pauses off screen and is skipped under reduced motion.
+  effects, parallax, the pinned horizontal track, the count-up and the
+  pointer ring all stand down, in JavaScript as well as in CSS.
+- Images go through `next/image` with explicit `sizes`. There is no
+  video anywhere in this build.
 - No horizontal scroll at any width, from 375 px to ultrawide.
 
 ## Notes for whoever picks this up next

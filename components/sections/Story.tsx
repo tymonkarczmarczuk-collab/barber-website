@@ -5,15 +5,22 @@ import { motion, useScroll, useTransform } from "motion/react";
 import { Section, Container } from "@/components/ui/Section";
 import { Eyebrow, Body, Lede } from "@/components/ui/Typography";
 import { Reveal } from "@/components/motion/Reveal";
-import { MediaFrame, MediaVideo } from "@/components/media/MediaFrame";
+import { MediaFrame } from "@/components/media/MediaFrame";
 import { media } from "@/lib/config/media";
 import { content } from "@/lib/config/content";
 import { useSafeReducedMotion } from "@/lib/hooks/useSafeReducedMotion";
 
+const moments = [
+  media.storyMomentDinner,
+  media.storyMomentFriends,
+  media.storyMomentTravel,
+] as const;
+
 /**
- * Cinematic chapter. A film if there is one, stills if there are not,
- * and a very large word that drifts against the scroll. The layout is
- * designed to hold up completely without any footage.
+ * The chapter about time spent with other people. A quiet filmstrip of
+ * three moments — dinner, friends, a journey — stands in for the
+ * cinematic sequence the brand document imagined; there is no video in
+ * this build, so nothing here depends on one existing.
  */
 export function Story() {
   const ref = useRef<HTMLDivElement>(null);
@@ -22,7 +29,7 @@ export function Story() {
 
   const wordX = useTransform(scrollYProgress, [0, 1], ["6%", "-12%"]);
   const wordOpacity = useTransform(scrollYProgress, [0, 0.28, 0.72, 1], [0, 0.11, 0.11, 0]);
-  const filmY = useTransform(scrollYProgress, [0, 1], ["-4%", "4%"]);
+  const stripY = useTransform(scrollYProgress, [0, 1], ["-3%", "3%"]);
 
   return (
     <Section id="story" tone="dark" className="overflow-hidden bg-navy-950 py-24 sm:py-32 lg:py-44">
@@ -50,31 +57,30 @@ export function Story() {
             </div>
           </div>
 
-          <motion.div style={reduced ? undefined : { y: filmY }} className="mt-16 sm:mt-20">
-            <Reveal kind="clip" duration={1.3} amount={0.15}>
-              <MediaVideo
-                asset={media.storyFilm}
-                className="w-full"
-                aspect="16 / 9"
-              />
-            </Reveal>
+          <motion.div
+            style={reduced ? undefined : { y: stripY }}
+            className="mt-16 grid grid-cols-3 gap-3 sm:mt-20 sm:gap-5 lg:gap-6"
+          >
+            {moments.map((asset, i) => (
+              <Reveal key={asset.src} kind="clip" duration={1.1} delay={i * 0.08}>
+                <MediaFrame
+                  asset={asset}
+                  aspect="4 / 5"
+                  sizes="(max-width: 640px) 33vw, (max-width: 1024px) 30vw, 22vw"
+                />
+              </Reveal>
+            ))}
           </motion.div>
 
-          <div className="mt-16 grid gap-10 sm:mt-20 lg:grid-cols-12 lg:gap-x-10">
-            <Reveal kind="clip" duration={1.2} className="lg:col-span-4">
-              <MediaFrame asset={media.storyClipHands} aspect="1 / 1" sizes="(max-width: 1024px) 100vw, 30vw" />
-            </Reveal>
-
-            <div className="grid gap-10 sm:grid-cols-2 lg:col-span-7 lg:col-start-6 lg:gap-x-10">
-              {content.story.columns.map((column, i) => (
-                <Reveal key={column.title} delay={i * 0.08}>
-                  <h3 className="font-display text-xl font-light text-ivory-50 sm:text-2xl">
-                    {column.title}
-                  </h3>
-                  <Body className="mt-4">{column.body}</Body>
-                </Reveal>
-              ))}
-            </div>
+          <div className="mt-16 grid gap-10 sm:mt-20 sm:grid-cols-2 lg:gap-x-16">
+            {content.story.columns.map((column, i) => (
+              <Reveal key={column.title} delay={i * 0.08}>
+                <h3 className="font-display text-xl font-light text-ivory-50 sm:text-2xl">
+                  {column.title}
+                </h3>
+                <Body className="mt-4">{column.body}</Body>
+              </Reveal>
+            ))}
           </div>
 
           <div className="mt-20 grid gap-10 sm:mt-28 lg:grid-cols-12 lg:gap-x-10">

@@ -43,7 +43,7 @@
   --color-charcoal-300: #8d939b;
 
   /* --- Typography ------------------------------------------------ */
-  --font-display: var(--font-cormorant), "Times New Roman", serif;
+  --font-display: var(--font-fraunces), "Times New Roman", serif;
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 
   --tracking-wordmark: 0.42em;
@@ -97,8 +97,7 @@
     color: var(--color-ivory-100);
     font-family: var(--font-sans);
     font-synthesis-weight: none;
-    /* Cormorant defaults to old-style figures, which turn "100" into
-       something closer to "IOO". Lining figures throughout. */
+    /* Lining figures throughout, regardless of what either typeface defaults to. */
     font-variant-numeric: lining-nums;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;

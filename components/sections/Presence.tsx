@@ -23,7 +23,7 @@ export function Presence() {
   const reduced = useSafeReducedMotion();
   const stageRef = useRef<HTMLDivElement>(null);
   const [engaged, setEngaged] = useState(false);
-  const hasRender = useMediaAvailable(media.campaignPrimary.src);
+  const hasRender = useMediaAvailable(media.watchFront.src);
 
   const px = useMotionValue(0.5);
   const py = useMotionValue(0.5);
@@ -95,7 +95,7 @@ export function Presence() {
             >
               {hasRender ? (
                 <MediaFrame
-                  asset={media.campaignPrimary}
+                  asset={media.watchFront}
                   aspect="4 / 5"
                   sizes="(max-width: 1024px) 74vw, 32vw"
                 />

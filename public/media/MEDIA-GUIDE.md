@@ -24,26 +24,24 @@ requests. You can therefore ship the site today and fill it in as
 photography arrives, straight from a phone or camera, with no export
 step.
 
-Video is the one exception: it must be `.mp4` exactly, because a
-`<video>` tag can't be pointed at an arbitrary format the way an
-`<Image>` can.
-
 **Renaming the base filename is the only thing that breaks this.** If
 you need a different name, change the `src` in `lib/config/media.ts`
 to match (the extension there is cosmetic — just change the basename).
+
+There is no video anywhere in this build. SARVEON has no film today,
+so nothing on the site depends on one existing — every slot below is a
+still photograph.
 
 ## Formats
 
 | Purpose | Accepted formats | Notes |
 | --- | --- | --- |
 | Photography | `.webp`, `.avif`, `.jpg`, `.jpeg`, `.png` — any is fine | `.webp` is preferred for file size, but a straight-from-camera `.jpg` works exactly the same. |
-| Film | `.mp4` only (H.264, AAC or silent) | Add a matching `-poster` still, in any accepted image format. |
 | Logo / monogram | `.svg` preferred, raster accepted | A flat, single-colour vector scales best; a PNG export works too. |
 
 Export at roughly **2× the largest display size**, then let `next/image`
-generate the responsive set. Keep individual stills under ~500 KB and
-hero film under ~6 MB; the film is lazy-loaded and pauses off screen,
-but it should never be the reason a page feels slow.
+generate the responsive set. Keep individual stills under ~500 KB so the
+page stays fast.
 
 Colour: sRGB. Product shots should sit on a deep navy or a warm neutral
 ivory ground so they land inside the site's palette rather than fighting it.
@@ -62,18 +60,16 @@ ivory ground so they land inside the site's palette rather than fighting it.
 | File | Ratio | Suggested size | Appears |
 | --- | --- | --- | --- |
 | `passage-01-hero.webp` | 4:5 | 1600 × 2000 | Hero, right-hand side. Needs generous negative space; the watch should sit slightly right of centre. Replaces the vector rendering. |
-| `hero-film.mp4` | 16:9 | 1920 × 1080 | Optional background film behind the hero. Muted, looped, plays inline. |
-| `hero-film-poster.webp` | 16:9 | 1920 × 1080 | Still shown before the film loads, and instead of it under reduced motion. |
 
 ## Product gallery — `#the-watch`
 
 | File | Ratio | Suggested size | Appears |
 | --- | --- | --- | --- |
-| `passage-01-front.webp` | 4:5 | 1600 × 2000 | Gallery view 01 — dial straight on. |
+| `passage-01-front.webp` | 4:5 | 1600 × 2000 | Gallery view 01 — dial straight on. Also used for the interactive tilt in "In the light" (`#presence`). |
 | `passage-01-three-quarter.webp` | 4:5 | 1600 × 2000 | Gallery view 02 — shows the polished bevel. |
 | `passage-01-side.webp` | 4:5 | 1600 × 2000 | Gallery view 03 — profile, case thickness, crown. |
-| `passage-01-caseback.webp` | 4:5 | 1600 × 2000 | Gallery view 04, and the large caseback section. |
-| `passage-01-wrist.webp` | 4:5 | 1600 × 2000 | Reserved for a wrist shot. |
+| `passage-01-wrist.webp` | 4:5 | 1600 × 2000 | Gallery view 04 — on the wrist. |
+| `passage-01-caseback.webp` | 4:5 | 1600 × 2000 | Gallery view 05, and the large caseback section. |
 
 ## Craft details — `#craft`
 
@@ -96,17 +92,24 @@ All 3:4, around 1200 × 1600. Shot as macro details on a consistent ground.
 | `passage-01-movement.webp` | 3:2 | 1800 × 1200 | Movement shown as an engineering component, on a neutral bench. |
 | `passage-01-movement-drawing.webp` | 1:1 | 1400 × 1400 | Technical drawing or dimensioned diagram. |
 
-## Story and place — `#story`, `#edition-context`
+## Story — `#story`
+
+A small filmstrip stands in for the cinematic sequence the brand
+document imagined — three quiet moments rather than a film.
 
 | File | Ratio | Suggested size | Appears |
 | --- | --- | --- | --- |
-| `story-film.mp4` | 16:9 | 1920 × 1080 | The main film in the story chapter. |
-| `story-film-poster.webp` | 16:9 | 1920 × 1080 | Poster still for the above. |
-| `story-clip-hands.mp4` | 1:1 | 1080 × 1080 | Short square clip — hands crossing the dial. |
-| `story-clip-hands-poster.webp` | 1:1 | 1080 × 1080 | Poster still for the above. |
-| `story-table.webp` | 4:3 | 1800 × 1350 | A table after a long conversation. People optional; no stock-photo poses. |
+| `story-moment-dinner.webp` | 4:5 | 1200 × 1500 | Filmstrip, 1st frame — the watch at dinner. |
+| `story-moment-friends.webp` | 4:5 | 1200 × 1500 | Filmstrip, 2nd frame — the watch among friends. |
+| `story-moment-travel.webp` | 4:5 | 1200 × 1500 | Filmstrip, 3rd frame — the watch while travelling. |
+| `story-table.webp` | 4:3 | 1800 × 1350 | Closing image, paired with the chapter's final line. A table after a long conversation. |
+
+## Place — `#edition-context`
+
+| File | Ratio | Suggested size | Appears |
+| --- | --- | --- | --- |
 | `atascadero.webp` | 16:9 | 2000 × 1125 | Atascadero, California — landscape or town. |
-| `atascadero-secondary.webp` | 3:4 | 1200 × 1600 | Second, quieter frame of the same place. |
+| `atascadero-secondary.webp` | 3:4 | 1200 × 1600 | Second, quieter frame — the local community. |
 
 ## Edition and packaging — `#edition`
 
@@ -115,12 +118,10 @@ All 3:4, around 1200 × 1600. Shot as macro details on a consistent ground.
 | `passage-01-packaging.webp` | 4:3 | 1800 × 1350 | Navy box, cradle, cloth, sleeve. |
 | `passage-01-certificate.webp` | 4:3 | 1800 × 1350 | Certificate of provenance, serial visible. |
 
-## Campaign and social
+## Social
 
 | File | Ratio | Suggested size | Appears |
 | --- | --- | --- | --- |
-| `campaign-01.webp` | 4:5 | 1600 × 2000 | Used in the interactive "In the light" section when present. |
-| `campaign-02.webp` | 4:5 | 1600 × 2000 | Held for campaign layouts. |
 | `og-image.webp` | 1200 × 630 | exact | Social sharing card. Until it exists, a card is generated from `app/opengraph-image.tsx`. |
 
 ---

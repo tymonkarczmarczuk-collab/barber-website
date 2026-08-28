@@ -1,7 +1,9 @@
 /**
  * MEDIA CONFIGURATION
  * ------------------------------------------------------------------
- * Every image and video on the site is declared here once.
+ * Every image on the site is declared here once. There is no video
+ * anywhere in this build — SARVEON has no film today, so no video
+ * plumbing is kept lying around waiting for one.
  *
  * HOW TO ADD REAL MEDIA
  *   1. Export the file with the exact filename listed in `src`.
@@ -30,8 +32,6 @@ export type MediaAsset = {
   /** CSS aspect-ratio for the frame; keeps layout stable with or without the file. */
   aspect: string;
   motif?: Motif;
-  /** Optional poster still for a video asset. */
-  poster?: string;
 };
 
 export const media = {
@@ -62,16 +62,6 @@ export const media = {
     aspect: "4 / 5",
     motif: "dial",
   },
-  heroVideo: {
-    src: "/media/hero-film.mp4",
-    alt: "SARVEON Passage 01 in motion",
-    label: "Passage 01",
-    caption: "Hero film",
-    aspect: "16 / 9",
-    poster: "/media/hero-film-poster.webp",
-    motif: "dial",
-  },
-
   /* --- Product gallery -------------------------------------------- */
   watchFront: {
     src: "/media/passage-01-front.webp",
@@ -191,23 +181,29 @@ export const media = {
   },
 
   /* --- Story & place ------------------------------------------------ */
-  storyFilm: {
-    src: "/media/story-film.mp4",
-    alt: "A short film about time",
-    label: "Time",
-    caption: "Film",
-    aspect: "16 / 9",
-    poster: "/media/story-film-poster.webp",
-    motif: "horizon",
+  storyMomentDinner: {
+    src: "/media/story-moment-dinner.webp",
+    alt: "Passage 01 on the wrist at dinner",
+    label: "Story",
+    caption: "Dinner",
+    aspect: "4 / 5",
+    motif: "case",
   },
-  storyClipHands: {
-    src: "/media/story-clip-hands.mp4",
-    alt: "Close sequence: hands moving across the dial",
-    label: "Time",
-    caption: "Clip — dial",
-    aspect: "1 / 1",
-    poster: "/media/story-clip-hands-poster.webp",
-    motif: "dial",
+  storyMomentFriends: {
+    src: "/media/story-moment-friends.webp",
+    alt: "Passage 01 on a table among friends",
+    label: "Story",
+    caption: "Friends",
+    aspect: "4 / 5",
+    motif: "case",
+  },
+  storyMomentTravel: {
+    src: "/media/story-moment-travel.webp",
+    alt: "Passage 01 on the wrist while travelling",
+    label: "Story",
+    caption: "Travel",
+    aspect: "4 / 5",
+    motif: "case",
   },
   storyTable: {
     src: "/media/story-table.webp",
@@ -252,24 +248,6 @@ export const media = {
     motif: "none",
   },
 
-  /* --- Campaign ------------------------------------------------------ */
-  campaignPrimary: {
-    src: "/media/campaign-01.webp",
-    alt: "Passage 01 campaign image",
-    label: "Campaign",
-    caption: "Image 01",
-    aspect: "4 / 5",
-    motif: "case",
-  },
-  campaignSecondary: {
-    src: "/media/campaign-02.webp",
-    alt: "Passage 01 campaign image",
-    label: "Campaign",
-    caption: "Image 02",
-    aspect: "4 / 5",
-    motif: "horizon",
-  },
-
   /* --- Social sharing ------------------------------------------------ */
   ogImage: {
     src: "/media/og-image.webp",
@@ -284,10 +262,4 @@ export const media = {
 export type MediaKey = keyof typeof media;
 
 /** Every declared public path, used by the on-disk existence scan. */
-export const mediaPaths: string[] = Array.from(
-  new Set(
-    Object.values(media).flatMap((asset) =>
-      "poster" in asset && asset.poster ? [asset.src, asset.poster] : [asset.src],
-    ),
-  ),
-);
+export const mediaPaths: string[] = Array.from(new Set(Object.values(media).map((asset) => asset.src)));

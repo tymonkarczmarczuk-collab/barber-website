@@ -6,7 +6,7 @@ import { ArrowDown, ArrowRight } from "lucide-react";
 import { Section, Container } from "@/components/ui/Section";
 import { Cta } from "@/components/ui/Cta";
 import { WatchDial } from "@/components/media/WatchDial";
-import { MediaFrame, MediaVideo } from "@/components/media/MediaFrame";
+import { MediaFrame } from "@/components/media/MediaFrame";
 import { useMediaAvailable } from "@/components/media/MediaProvider";
 import { media } from "@/lib/config/media";
 import { content } from "@/lib/config/content";
@@ -18,15 +18,12 @@ import { useSafeReducedMotion } from "@/lib/hooks/useSafeReducedMotion";
  *
  * Deep navy, a great deal of empty space, the watch held to the right
  * and the language to the left. The watch drifts a little slower than
- * the page as you scroll; if a hero film exists it plays quietly
- * behind everything, and if it does not, nothing about the composition
- * changes.
+ * the page as you scroll.
  */
 export function Hero() {
   const ref = useRef<HTMLDivElement>(null);
   const reduced = useSafeReducedMotion();
   const hasHeroImage = useMediaAvailable(media.heroWatch.src);
-  const hasHeroVideo = useMediaAvailable(media.heroVideo.src);
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -41,14 +38,6 @@ export function Hero() {
   return (
     <Section id="top" tone="dark" className="overflow-hidden bg-navy-950">
       <div ref={ref} className="relative flex min-h-[100svh] flex-col justify-center pb-10 pt-28 sm:pb-24 sm:pt-36 lg:min-h-screen lg:pb-20 lg:pt-40">
-        {/* Optional background film — never required, never blocking. */}
-        {hasHeroVideo ? (
-          <div aria-hidden="true" className="absolute inset-0 opacity-30">
-            <MediaVideo asset={media.heroVideo} className="h-full w-full" aspect="auto" rounded={false} />
-            <div className="absolute inset-0 bg-[radial-gradient(120%_90%_at_70%_35%,transparent_0%,var(--color-navy-950)_78%)]" />
-          </div>
-        ) : null}
-
         {/* A single, very quiet light source behind the watch. */}
         <div
           aria-hidden="true"

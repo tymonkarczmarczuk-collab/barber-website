@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
 
 import { site } from "@/lib/config/site";
@@ -12,13 +12,20 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { Cursor } from "@/components/layout/Cursor";
 
-/* High-contrast serif for display, neutral sans for everything else. */
-const cormorant = Cormorant_Garamond({
+/*
+ * High-contrast display serif for headlines, neutral sans for
+ * everything else. Fraunces is loaded as a variable font so its
+ * optical-size axis can respond to type size on its own — a large
+ * headline gets the dramatic high-contrast cut the brief calls for,
+ * body-scale display type stays calmer, and neither needs a manual
+ * font-variation-settings override.
+ */
+const fraunces = Fraunces({
   subsets: ["latin"],
-  weight: ["300", "400", "500"],
+  weight: "variable",
   style: ["normal", "italic"],
   display: "swap",
-  variable: "--font-cormorant",
+  variable: "--font-fraunces",
 });
 
 const inter = Inter({
@@ -167,7 +174,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const manifest = scanMediaManifest();
 
   return (
-    <html lang="en" className={`${cormorant.variable} ${inter.variable}`}>
+    <html lang="en" className={`${fraunces.variable} ${inter.variable}`}>
       <body className="antialiased">
         <script
           type="application/ld+json"
