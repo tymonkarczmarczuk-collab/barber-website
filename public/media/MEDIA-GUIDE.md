@@ -1,31 +1,44 @@
 # SARVEON — Media Guide
 
 Everything visual on the site is declared once in `lib/config/media.ts`.
-Drop a file into this folder with the exact filename below and it
-appears automatically — no code change, no import, no re-wiring.
+Drop a file into this folder with the filename below (any of the
+accepted formats — see below) and it appears automatically — no code
+change, no import, no re-wiring.
 
 ## How it works
 
-1. Export the file with the **exact filename** from the tables below.
+1. Name the file to match the **basename** in the tables below — e.g.
+   for `passage-01-hero.webp` you can just as well save
+   `passage-01-hero.jpg` or `passage-01-hero.png`. No conversion needed.
 2. Put it in `/public/media/`.
-3. Restart `npm run dev` (or rebuild for production).
+3. Refresh the page (`npm run dev` picks it up immediately; a
+   production build needs a rebuild).
 
-The site scans this folder at render time. A file that is present is
-rendered through `next/image` (or `<video>`); a file that is absent
-falls back to a designed placeholder in the same frame — same size,
-same rhythm, no layout shift and no broken image requests. You can
-therefore ship the site today and fill it in as photography arrives.
+The site scans this folder at render time and checks, for every
+declared image, whether that file exists as `.webp`, `.avif`, `.jpg`,
+`.jpeg` or `.png` — in that order of preference — and renders whichever
+one it finds through `next/image`. A file that is present is rendered;
+one that is absent falls back to a designed placeholder in the same
+frame — same size, same rhythm, no layout shift and no broken image
+requests. You can therefore ship the site today and fill it in as
+photography arrives, straight from a phone or camera, with no export
+step.
 
-**Renaming a file is the only thing that breaks this.** If you need a
-different name, change the `src` in `lib/config/media.ts` to match.
+Video is the one exception: it must be `.mp4` exactly, because a
+`<video>` tag can't be pointed at an arbitrary format the way an
+`<Image>` can.
+
+**Renaming the base filename is the only thing that breaks this.** If
+you need a different name, change the `src` in `lib/config/media.ts`
+to match (the extension there is cosmetic — just change the basename).
 
 ## Formats
 
-| Purpose | Format | Notes |
+| Purpose | Accepted formats | Notes |
 | --- | --- | --- |
-| Photography | `.webp` | AVIF is also served automatically by `next/image`. |
-| Film | `.mp4` (H.264, AAC or silent) | Add a matching `-poster.webp` still. |
-| Logo / monogram | `.svg` | Flat, single colour, no embedded raster. |
+| Photography | `.webp`, `.avif`, `.jpg`, `.jpeg`, `.png` — any is fine | `.webp` is preferred for file size, but a straight-from-camera `.jpg` works exactly the same. |
+| Film | `.mp4` only (H.264, AAC or silent) | Add a matching `-poster` still, in any accepted image format. |
+| Logo / monogram | `.svg` preferred, raster accepted | A flat, single-colour vector scales best; a PNG export works too. |
 
 Export at roughly **2× the largest display size**, then let `next/image`
 generate the responsive set. Keep individual stills under ~500 KB and

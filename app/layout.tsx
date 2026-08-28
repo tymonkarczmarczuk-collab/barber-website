@@ -30,7 +30,7 @@ const inter = Inter({
 
 export function generateMetadata(): Metadata {
   const manifest = scanMediaManifest();
-  const ogImage = manifest[media.ogImage.src] ? media.ogImage.src : "/opengraph-image";
+  const ogImage = manifest[media.ogImage.src] || "/opengraph-image";
 
   return {
     metadataBase: new URL(site.url),

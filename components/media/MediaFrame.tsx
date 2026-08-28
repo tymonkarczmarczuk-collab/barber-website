@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import type { MediaAsset, Motif } from "@/lib/config/media";
-import { useMediaAvailable } from "@/components/media/MediaProvider";
+import { useResolvedMediaSrc } from "@/components/media/MediaProvider";
 import { useSurface } from "@/components/ui/Section";
 import {
   CaseMotif,
@@ -53,7 +53,7 @@ export function MediaFrame({
   tone,
   rounded = true,
 }: CommonProps) {
-  const available = useMediaAvailable(asset.src);
+  const resolvedSrc = useResolvedMediaSrc(asset.src);
   const surface = useSurface();
   const resolvedTone = tone ?? surface;
 
@@ -62,9 +62,9 @@ export function MediaFrame({
       className={`relative overflow-hidden ${rounded ? "rounded-frame" : ""} ${className}`}
       style={{ aspectRatio: aspect ?? asset.aspect }}
     >
-      {available ? (
+      {resolvedSrc ? (
         <Image
-          src={asset.src}
+          src={resolvedSrc}
           alt={asset.alt}
           fill
           sizes={sizes}
@@ -93,8 +93,8 @@ export function MediaVideo({
   rounded = true,
   children,
 }: CommonProps) {
-  const videoAvailable = useMediaAvailable(asset.src);
-  const posterAvailable = useMediaAvailable(asset.poster);
+  const videoSrc = useResolvedMediaSrc(asset.src);
+  const posterSrc = useResolvedMediaSrc(asset.poster);
   const surface = useSurface();
   const resolvedTone = tone ?? surface;
   const ref = useRef<HTMLVideoElement>(null);
@@ -121,14 +121,14 @@ export function MediaVideo({
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [allowMotion, videoAvailable]);
+  }, [allowMotion, videoSrc]);
 
   return (
     <div
       className={`relative overflow-hidden ${rounded ? "rounded-frame" : ""} ${className}`}
       style={{ aspectRatio: aspect ?? asset.aspect }}
     >
-      {videoAvailable && allowMotion ? (
+      {videoSrc && allowMotion ? (
         <video
           ref={ref}
           className="absolute inset-0 h-full w-full object-cover"
@@ -136,13 +136,13 @@ export function MediaVideo({
           loop
           playsInline
           preload="none"
-          poster={posterAvailable ? asset.poster : undefined}
+          poster={posterSrc}
           aria-label={asset.alt}
         >
-          <source src={asset.src} type="video/mp4" />
+          <source src={videoSrc} type="video/mp4" />
         </video>
-      ) : posterAvailable && asset.poster ? (
-        <Image src={asset.poster} alt={asset.alt} fill sizes="100vw" className="object-cover" />
+      ) : posterSrc ? (
+        <Image src={posterSrc} alt={asset.alt} fill sizes="100vw" className="object-cover" />
       ) : (
         <Placeholder asset={asset} tone={resolvedTone} kind="video">
           {children}

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { media } from "@/lib/config/media";
-import { useMediaAvailable } from "@/components/media/MediaProvider";
+import { useResolvedMediaSrc } from "@/components/media/MediaProvider";
 
 /**
  * The SARVEON wordmark.
@@ -21,7 +21,7 @@ export function Wordmark({
   size?: "sm" | "md" | "lg" | "xl";
   as?: "span" | "h1" | "div";
 }) {
-  const hasFile = useMediaAvailable(media.logo.src);
+  const resolvedSrc = useResolvedMediaSrc(media.logo.src);
 
   const sizes = {
     sm: "text-[0.7rem] tracking-[0.36em]",
@@ -32,11 +32,11 @@ export function Wordmark({
 
   const heights = { sm: 14, md: 17, lg: 26, xl: 48 } as const;
 
-  if (hasFile) {
+  if (resolvedSrc) {
     return (
       <Tag className={`inline-flex items-center ${className}`}>
         <Image
-          src={media.logo.src}
+          src={resolvedSrc}
           alt={media.logo.alt}
           width={heights[size] * 6}
           height={heights[size]}

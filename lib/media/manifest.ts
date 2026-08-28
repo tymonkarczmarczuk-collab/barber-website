@@ -2,7 +2,15 @@
  * MEDIA MANIFEST (server side)
  * ------------------------------------------------------------------
  * Scans /public for the files declared in lib/config/media.ts and
- * reports which ones actually exist.
+ * reports which ones actually exist — and under which extension.
+ *
+ * A declared path like "/media/passage-01-hero.webp" is the preferred
+ * form, but a contributor dropping in a raw phone photo will usually
+ * have a .jpg or .png instead. Rather than requiring a manual
+ * conversion, the scan also looks for the same filename under a set of
+ * common raster extensions and resolves to whichever one is actually
+ * present. Video files are matched exactly (.mp4 only) since <video>
+ * cannot be pointed at an arbitrary format the same way.
  *
  * The result is handed to the client through <MediaProvider>, so a
  * component can render a real <Image>/<video> when the asset is on
@@ -18,22 +26,49 @@ import fs from "node:fs";
 import path from "node:path";
 import { mediaPaths } from "@/lib/config/media";
 
-export type MediaManifest = Record<string, boolean>;
+/**
+ * Maps each declared path to the path that should actually be used —
+ * usually itself, sometimes the same name under a different extension
+ * — or `false` when nothing matching was found on disk.
+ */
+export type MediaManifest = Record<string, string | false>;
 
 const PUBLIC_DIR = path.join(process.cwd(), "public");
+
+/** Tried in order after the declared extension; first match wins. */
+const IMAGE_FALLBACK_EXTENSIONS = ["webp", "avif", "jpg", "jpeg", "png"];
+
+function fileExists(filePath: string): boolean {
+  try {
+    return fs.statSync(filePath).isFile();
+  } catch {
+    return false;
+  }
+}
+
+function resolveAsset(declaredPath: string): string | false {
+  const direct = path.join(PUBLIC_DIR, declaredPath.replace(/^\//, ""));
+  if (fileExists(direct)) return declaredPath;
+
+  const ext = path.extname(declaredPath);
+  if (ext === ".mp4") return false;
+
+  const withoutExt = declaredPath.slice(0, -ext.length);
+  for (const candidate of IMAGE_FALLBACK_EXTENSIONS) {
+    const candidatePath = `${withoutExt}.${candidate}`;
+    if (fileExists(path.join(PUBLIC_DIR, candidatePath.replace(/^\//, "")))) {
+      return candidatePath;
+    }
+  }
+
+  return false;
+}
 
 export function scanMediaManifest(): MediaManifest {
   const manifest: MediaManifest = {};
 
-  for (const publicPath of mediaPaths) {
-    const filePath = path.join(PUBLIC_DIR, publicPath.replace(/^\//, ""));
-    let exists = false;
-    try {
-      exists = fs.statSync(filePath).isFile();
-    } catch {
-      exists = false;
-    }
-    manifest[publicPath] = exists;
+  for (const declaredPath of mediaPaths) {
+    manifest[declaredPath] = resolveAsset(declaredPath);
   }
 
   return manifest;
